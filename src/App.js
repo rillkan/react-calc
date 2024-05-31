@@ -1,7 +1,9 @@
+//App.js
 import { useReducer } from "react"
 import DigitButton from "./DigitButton"
 import "./App.css"
 
+//global variable "ACTIONS" to access the key-value pairs
 export const ACTIONS = {
   ADD_DIGIT: 'add-digit',
   CLEAR: 'clear',
@@ -37,21 +39,25 @@ function App() {
       </div>
       <button className="span-two">AC</button>
       <button>DEL</button>
-      <DigitButton digit="÷" dispatch={dispatch} />
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-      <button>*</button>
-      <button>4</button>
-      <button>5</button>
-      <button>6</button>
       <button>÷</button>
-      <button>7</button>
-      <button>8</button>
-      <button>9</button>
+      <button>*</button>
+      <button>+</button>
       <button>-</button>
-      <button>.</button>
-      <button>0</button>
+
+      <DigitButton digit="1" sendDispatch={dispatch} />
+      <DigitButton digit="2" sendDispatch={dispatch} />
+      <DigitButton digit="3" sendDispatch={dispatch} />
+
+      <DigitButton digit="4" sendDispatch={dispatch} />
+      <DigitButton digit="5" sendDispatch={dispatch} />
+      <DigitButton digit="6" sendDispatch={dispatch} />
+
+      <DigitButton digit="7" sendDispatch={dispatch} />
+      <DigitButton digit="8" sendDispatch={dispatch} />
+      <DigitButton digit="9" sendDispatch={dispatch} />
+
+      <DigitButton digit="." sendDispatch={dispatch} />
+      <DigitButton digit="0" sendDispatch={dispatch} />
       <button className="span-two">=</button>
     </div>
   )

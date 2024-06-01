@@ -1,5 +1,6 @@
 import { useReducer } from "react"
 import DigitButton from "./DigitButton"
+import OperationButton from "./OperationButton"
 
 import "./App.css"
 
@@ -28,6 +29,18 @@ function reducer(state, { type, payload }) {
     case ACTIONS.CLEAR:
       return {};
 
+    case ACTIONS.CHOOSE_OPERATION:
+      if (state.currentOperand == null && state.previousOperand == null) {
+        return state
+      }
+      if (state.previousOperand == null) {
+        return {
+          ...state, //return the state from the above if statement
+          operation: payload.operation, //extract the specific operation from payload
+          previousOperand: state.currentOperand, //previousOperand becomes the currentOperand
+          currentOperand: null //reset the currentOperand value
+        }
+      }
     default:
       return state;
   }
@@ -45,19 +58,19 @@ function App() {
       </div>
       <button className="span-two" onClick={() => dispatch({ type: ACTIONS.CLEAR })}>AC</button>
       <button>DEL</button>
-      <button>÷</button>
+      <OperationButton operation="÷" sendDispatch={dispatch} />
       <DigitButton digit="1" sendDispatch={dispatch} />
       <DigitButton digit="2" sendDispatch={dispatch} />
       <DigitButton digit="3" sendDispatch={dispatch} />
-      <button>*</button>
+      <OperationButton operation="*" sendDispatch={dispatch} />
       <DigitButton digit="4" sendDispatch={dispatch} />
       <DigitButton digit="5" sendDispatch={dispatch} />
       <DigitButton digit="6" sendDispatch={dispatch} />
-      <button>+</button>
+      <OperationButton operation="+" sendDispatch={dispatch} />
       <DigitButton digit="7" sendDispatch={dispatch} />
       <DigitButton digit="8" sendDispatch={dispatch} />
       <DigitButton digit="9" sendDispatch={dispatch} />
-      <button>-</button>
+      <OperationButton operation="-" sendDispatch={dispatch} />
       <DigitButton digit="." sendDispatch={dispatch} />
       <DigitButton digit="0" sendDispatch={dispatch} />
       <button className="span-two">=</button>

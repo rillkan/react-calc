@@ -1,7 +1,6 @@
 import { useReducer } from "react"
 import DigitButton from "./DigitButton"
 import OperationButton from "./OperationButton"
-
 import "./App.css"
 
 //global variable "ACTIONS" to access the key-value pairs
@@ -41,10 +40,18 @@ function reducer(state, { type, payload }) {
           currentOperand: null //reset the currentOperand value
         }
       }
+      return {
+        ...state,
+        previousOperand: evaluate(state), //perform the evaluate function and becomes the new previousOperand
+        operation: payload.operation,//extract the specific operation from payload
+        currentOperand: null//reset the currentOperand value
+      }
     default:
       return state;
   }
 }
+
+
 
 function App() {
   const [{ currentOperand, previousOperand, operation }, dispatch] = useReducer(reducer, {})

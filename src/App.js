@@ -29,14 +29,23 @@ function reducer(state, { type, payload }) {
       return {};
 
     case ACTIONS.CHOOSE_OPERATION:
-      if (state.currentOperand == null && state.previousOperand == null) {
+      if (state.currentOperand == null && state.previousOperand == null) {//This check ensures an operation cannot be chosen if there are no operands available
         return state
       }
+
+      if (state.currentOperand == null) { //deals when changing operations after an evaluation
+        return {
+          ...state,
+          operation: payload.operation //updates the operation
+        }
+      }
+
       if (state.previousOperand == null) {
         return {
           ...state, //return the state from the above if statement
           operation: payload.operation, //extract the specific operation from payload
           previousOperand: state.currentOperand, //previousOperand becomes the currentOperand
+
           currentOperand: null //reset the currentOperand value
         }
       }

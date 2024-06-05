@@ -2,6 +2,7 @@ import { useReducer } from "react"
 import DigitButton from "./DigitButton"
 import OperationButton from "./OperationButton"
 import "./App.css"
+import { current } from "@reduxjs/toolkit"
 
 //global variable "ACTIONS" to access the key-value pairs
 export const ACTIONS = {
@@ -59,6 +60,13 @@ function reducer(state, { type, payload }) {
     case ACTIONS.EVALUATE:
       if (state.operation == null || state.currentOperand == null || state.previousOperand == null) {
         return state
+      }
+      //If there're not null, return...
+      return {
+        ...state,
+        previousOperand: null,
+        currentOperand: evaluate(state),
+        operation: null
       }
 
     default:

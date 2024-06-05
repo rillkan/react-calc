@@ -55,6 +55,12 @@ function reducer(state, { type, payload }) {
         operation: payload.operation,//extract the specific operation from payload
         currentOperand: null//reset the currentOperand value
       }
+
+    case ACTIONS.EVALUATE:
+      if (state.operation == null || state.currentOperand == null || state.previousOperand == null) {
+        return state
+      }
+
     default:
       return state;
   }
@@ -111,7 +117,7 @@ function App() {
       <OperationButton operation="-" sendDispatch={dispatch} />
       <DigitButton digit="." sendDispatch={dispatch} />
       <DigitButton digit="0" sendDispatch={dispatch} />
-      <button className="span-two">=</button>
+      <button className="span-two" onClick={() => dispatch({ type: ACTIONS.EVALUATE })}>=</button>
     </div>
   )
 }

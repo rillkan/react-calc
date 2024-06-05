@@ -2,7 +2,6 @@ import { useReducer } from "react"
 import DigitButton from "./DigitButton"
 import OperationButton from "./OperationButton"
 import "./App.css"
-import { current } from "@reduxjs/toolkit"
 
 //global variable "ACTIONS" to access the key-value pairs
 export const ACTIONS = {
@@ -17,6 +16,13 @@ function reducer(state, { type, payload }) {
   console.log("Action dispatched:", type, payload); // Log the dispatched action
   switch (type) {
     case ACTIONS.ADD_DIGIT:
+      if (state.overwrite) {
+        return {
+          ...state,
+          currentOperand: payload.digit,
+          overwrite: false
+        }
+      }
       if (payload.digit === '0' && state.currentOperand === '0') return state //Handle multiple 0 inputs and avoid 0000 as currentOperand
       if (payload.digit === '.' && state.currentOperand.includes(".")) return state //Handle "." as currentOperand only has 1 "."
       const newOperand = `${state.currentOperand || ""}${payload.digit}`;
@@ -34,14 +40,14 @@ function reducer(state, { type, payload }) {
         return state
       }
 
-      if (state.currentOperand == null) { //deals when changing operations after an evaluation
+      if (state.currentOperand == null) { //Changing operations after an evaluation
         return {
           ...state,
           operation: payload.operation //updates the operation
         }
       }
 
-      if (state.previousOperand == null) {
+      if (state.previousOperand == null) {//Moves the currentOperand to previousOperand
         return {
           ...state, //return the state from the above if statement
           operation: payload.operation, //extract the specific operation from payload
@@ -64,8 +70,9 @@ function reducer(state, { type, payload }) {
       //If there're not null, return...
       return {
         ...state,
+        overwrite: true,
         previousOperand: null,
-        currentOperand: evaluate(state),
+        currentOperand: evaluate(state), //display the currentOperand
         operation: null
       }
 

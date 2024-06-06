@@ -17,14 +17,9 @@ function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.ADD_DIGIT:
       if (state.overwrite) {
-        return {
-          ...state,
-          currentOperand: payload.digit,
-          overwrite: false
-        }
+        return {}
       }
-      if (payload.digit === '0' && state.currentOperand === '0') return state //Handle multiple 0 inputs and avoid 0000 as currentOperand
-      if (payload.digit === '.' && state.currentOperand.includes(".")) return state //Handle "." as currentOperand only has 1 "."
+
       const newOperand = `${state.currentOperand || ""}${payload.digit}`;
       console.log("New current operand:", newOperand); // Log the new current operand
       return {
@@ -34,6 +29,26 @@ function reducer(state, { type, payload }) {
 
     case ACTIONS.CLEAR:
       return {};
+
+    case ACTIONS.DELETE_DIGIT:
+      if (state.overwrite) {
+        return {
+          ...state,
+          overwrite: false,
+          currentOperand: null
+        }
+      }
+      if (state.currentOperand == null) return state /// return the original state
+      if (state.currentOperand.length === 1) {
+        return {
+          ...state,
+          currentOperand: null
+        }
+      }
+      return {
+        ...state,
+        currentOperand: state.currentOperand.slice(0, -1)
+      }
 
     case ACTIONS.CHOOSE_OPERATION:
       if (state.currentOperand == null && state.previousOperand == null) {//This check ensures an operation cannot be chosen if there are no operands available
@@ -116,7 +131,7 @@ function App() {
         <div className="current-operand">{currentOperand}</div>
       </div>
       <button className="span-two" onClick={() => dispatch({ type: ACTIONS.CLEAR })}>AC</button>
-      <button>DEL</button>
+      <button onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT })}>DEL</button>
       <OperationButton operation="÷" sendDispatch={dispatch} />
       <DigitButton digit="1" sendDispatch={dispatch} />
       <DigitButton digit="2" sendDispatch={dispatch} />

@@ -17,9 +17,14 @@ function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.ADD_DIGIT:
       if (state.overwrite) {
-        return {}
+        return {
+          ...state,
+          currentOperand: payload.digit,
+          overwrite: false
+        }
       }
-
+      if (payload.digit === '0' && state.currentOperand === '0') return state //Handle multiple 0 inputs and avoid 0000 as currentOperand
+      if (payload.digit === '.' && state.currentOperand.includes(".")) return state //Handle "." as currentOperand only has 1 "."
       const newOperand = `${state.currentOperand || ""}${payload.digit}`;
       console.log("New current operand:", newOperand); // Log the new current operand
       return {

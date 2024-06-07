@@ -1,4 +1,4 @@
-import { useReducer } from "react"
+import { useEffect, useReducer } from "react"
 import DigitButton from "./DigitButton"
 import OperationButton from "./OperationButton"
 import "./App.css"
@@ -125,9 +125,21 @@ function evaluate({ currentOperand, previousOperand, operation }) {
   return computation.toString() //return and convert the float to a string
 }
 
+const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
+  maximumFractionDigits: 0, //no decimal places will be formatted, effectively ensuring that only the integer part of the number will be formatted with commas
+})
+
+
 function App() {
   const [{ currentOperand, previousOperand, operation }, dispatch] = useReducer(reducer, {})
 
+  useEffect(() => {
+    // Test cases to verify the INTEGER_FORMATTER
+    console.log(`Integer format from 1234 to ${INTEGER_FORMATTER.format(1234)}`); //Integer Format(1234 to be 1,234)
+    console.log(INTEGER_FORMATTER.format(123456789)); //" 123456789 -> 123,456,789"
+    console.log(INTEGER_FORMATTER.format(1000)); //"1000 -> 1,000"
+    console.log(INTEGER_FORMATTER.format(12.543)); // "12.543 -> 1,234,567,890" (integer part only)
+  }, []);
 
   return (
     <div className="calculator-grid">

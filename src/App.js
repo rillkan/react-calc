@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react"
+import { useReducer } from "react"
 import DigitButton from "./DigitButton"
 import OperationButton from "./OperationButton"
 import "./App.css"
@@ -129,23 +129,22 @@ const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
   maximumFractionDigits: 0, //no decimal places will be formatted, effectively ensuring that only the integer part of the number will be formatted with commas
 })
 
+function formatOperand(operand) {
+  if (operand == null) return //handle if currentOperand & previousOperand is null
+  const [integer, decimal] = operand.split('.') //split into two parts: integer and decimal, using "."" Etc: 123.45 Integer = 123, Decimal = 45
+  if (decimal == null) return INTEGER_FORMATTER.format(integer)//handle if theres no decimal on currentOperand, return just the integer
+  return `${INTEGER_FORMATTER.format(integer)}.${decimal}`//handle if there IS decimal, return both integer and decimal. Etc: 123.45
+}
 
 function App() {
   const [{ currentOperand, previousOperand, operation }, dispatch] = useReducer(reducer, {})
 
-  useEffect(() => {
-    // Test cases to verify the INTEGER_FORMATTER
-    console.log(`Integer format from 1234 to ${INTEGER_FORMATTER.format(1234)}`); //Integer Format(1234 to be 1,234)
-    console.log(INTEGER_FORMATTER.format(123456789)); //" 123456789 -> 123,456,789"
-    console.log(INTEGER_FORMATTER.format(1000)); //"1000 -> 1,000"
-    console.log(INTEGER_FORMATTER.format(12.543)); // "12.543 -> 1,234,567,890" (integer part only)
-  }, []);
 
   return (
     <div className="calculator-grid">
       <div className="output">
-        <div className="previous-operand">{previousOperand} {operation}</div>
-        <div className="current-operand">{currentOperand}</div>
+        <div className="previous-operand">{formatOperand(previousOperand)} {operation}</div>
+        <div className="current-operand">{formatOperand(currentOperand)}</div>
       </div>
       <button className="span-two" onClick={() => dispatch({ type: ACTIONS.CLEAR })}>AC</button>
       <button onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT })}>DEL</button>
